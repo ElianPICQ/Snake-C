@@ -6,7 +6,7 @@ void	 game_over(SDL_Window	**window, SDL_Renderer	**renderer, TTF_Font **font, S
 	SDL_bool is_game_over = SDL_TRUE;
 	// Couleur du crayon
 	SDL_Color color = { 255, 255, 255 };
-	// Taille de boutons
+	// Taille des boites de texte
 	int TextW, TextH;
 	SDL_Event event;
 
@@ -61,7 +61,6 @@ void	 game_over(SDL_Window	**window, SDL_Renderer	**renderer, TTF_Font **font, S
 					if (WINDOW_WIDTH / 4 - TextW / 2 <= event.motion.x && event.motion.x <= WINDOW_WIDTH / 4 + TextW / 2
 						&& WINDOW_HEIGHT / 3 + TextH * 2 <= event.motion.y && event.motion.y <= WINDOW_HEIGHT / 3 + TextH * 2 + TextH)
 					{
-						printf("RETOUR AU MENU PRINCIPAL\n");
 						is_game_over = SDL_FALSE;
 						*game_launched = SDL_FALSE;
 					}
@@ -69,7 +68,6 @@ void	 game_over(SDL_Window	**window, SDL_Renderer	**renderer, TTF_Font **font, S
 					else if ((WINDOW_WIDTH - WINDOW_WIDTH / 4) - TextW / 2 <= event.motion.x && event.motion.x <= (WINDOW_WIDTH - WINDOW_WIDTH / 4) + TextW / 2
 						&& WINDOW_HEIGHT / 3 + TextH * 2 <= event.motion.y && event.motion.y <= WINDOW_HEIGHT / 3 + TextH * 2 + TextH)
 					{
-						printf("GAME OVER\n");
 						is_game_over = SDL_FALSE;
 						*game_launched = SDL_FALSE;
 						*program_launched = SDL_FALSE;
