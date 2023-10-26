@@ -37,9 +37,11 @@ void	snake_game()
 	// Booleen Jeu lancé/Menu principal
 	SDL_bool game_launched = SDL_FALSE;
 	// Booleen Play/Pause
-	SDL_bool pause = SDL_FALSE;
+	SDL_bool game_paused = SDL_FALSE;
 	// Booleen Game Over
-	SDL_bool is_game_over;
+	SDL_bool is_game_over = SDL_FALSE;
+	// Booleen pour savoir si il faut charger la partie depuis la sauvegarde
+	SDL_bool load_from_save = SDL_FALSE;
 
 	SDL_Event event;
 
@@ -88,21 +90,31 @@ void	snake_game()
 		SDL_RenderClear(renderer);
 		menu_principal(&renderer, &font, &program_launched, &game_launched);
 
+		// Charger la sauvegarde ou initialiser une nouvelle partie
+		if (load_from_save)
+		{
+
+		}
+		else
+		{
+			// Initialisation du Serpent (Nécesseite la Tete & la première struct du Serpent)
+			for (i = 1; i < INITIAL_SNAKE_SIZE; i++)
+				list_push_back(&Tete);
+
+			pommesAManger = 0;
+			initialise_pommes(Pomme);		
+		}
+
 		// On met les variables à leur état initial avant de (re)lancer la partie
 		is_game_over = SDL_FALSE;
+		game_paused = SDL_FALSE;
 		direction = 0;
 		vitesse = SLOW;
-
-		// Initialisation du Serpent (Nécesseite la Tete & la première struct du Serpent)
-		for (i = 1; i < INITIAL_SNAKE_SIZE; i++)
-			list_push_back(&Tete);
-
-		pommesAManger = 0;
-		initialise_pommes(Pomme);
 
 		// BOUCLE DE JEU PRINCIPALE
 		while (game_launched)
 		{
+			game_paused = SDL_FALSE;
 			SDL_RenderClear(renderer);
 
 			// Construction d'un damier
@@ -155,9 +167,9 @@ void	snake_game()
 					case SDL_KEYDOWN:
 						switch(event.key.keysym.sym)
 						{
-							// Quitter le programme -> Changer "Menu Pause"
+							// Menu Pause
 							case SDLK_ESCAPE:
-								pause = SDL_TRUE;
+								game_paused = SDL_TRUE;
 								break;
 
 							// Changer de vitesse
@@ -208,7 +220,10 @@ void	snake_game()
 			/******************* FIN GESTION DES EVENEMENTS *******************/
 
 			// BOUCLE DE PAUSE
-			while (pause)
+			if (game_paused)
+				pause(&window, &renderer, &font, &game_launched, &program_launched);
+/*
+			while (game_paused)
 			{
 				while (SDL_PollEvent(&event))
 				{
@@ -216,7 +231,7 @@ void	snake_game()
 					{
 						// Croix de fermeture
 						case SDL_QUIT:
-							pause = SDL_FALSE;
+							game_paused = SDL_FALSE;
 							game_launched = SDL_FALSE;
 							program_launched = SDL_FALSE;
 							break;
@@ -227,7 +242,7 @@ void	snake_game()
 							{
 								// Quitter le programme -> Changer "Menu Pause"
 								case SDLK_ESCAPE:
-									pause = SDL_FALSE;
+									game_paused = SDL_FALSE;
 									break;
 
 								default: break;
@@ -237,7 +252,7 @@ void	snake_game()
 						default: break;
 					}
 				}
-			}
+			}*/
 			// Deplacer Snake
 			move_snake(&Tete, direction, &game_launched, Pomme, &pommesAManger, &is_game_over, &pommesMangees);
 
