@@ -1,7 +1,7 @@
 /*
 *	Rappel de compilation
 *	> Windows :
-gcc src/main.c src/snake.c src/menu_principal.c src/modifier_snake.c src/pommes.c src/game_over.c src/score.c src/gestion_erreur.c -o bin/prog -I include -L lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf
+gcc src/main.c src/snake.c src/menu_principal.c src/modifier_snake.c src/pommes.c src/menu_pause.c src/game_over.c src/score.c src/gestion_erreur.c -o bin/prog -I include -L lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf
 *	> GNU/Linux, MacOS : gcc src/main.c src/snake.c src/gestion_erreur.c &(sdl2-config --cflags --libs) -o prog
 */
 
@@ -33,10 +33,8 @@ int main(int argc, char **argv)
 
 // TRUCS A FAIRE
 
-/*	GAME OVER - DONE
- *		-> Bouton Rejouer au lieu de Jouer
- *			-> Donc Reset le Serpent et les Pommes
- *
+/*	BANDEAU SUPERIEUR POUR AFFICHER LES INFOS
+ *		-> Bandeau de 50px? de hauteur sur toute la largeur dans lequel mettre le score & autres infos
  *
  *	GERER LES ERREURS
  *		-> Fichier menu_principal.c
@@ -50,7 +48,7 @@ int main(int argc, char **argv)
  *
  *
  *	SCORE
- *		-> Afficher le nombre de pommes mangées
+ *		-> Afficher le nombre de pommes mangées	DONE
  *		-> Afficher la taille
  *
  *
@@ -78,5 +76,15 @@ int main(int argc, char **argv)
  *		SON
  *			-> Activer/Desactiver
  *			-> Volume si possible
+ *
+ */
+
+
+// TRUCS FAITS
+
+/*	GAME OVER - DONE
+ *		-> Bouton Rejouer au lieu de Jouer
+ *			-> Donc Reset le Serpent et les Pommes
+ *
  *
  */
