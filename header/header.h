@@ -86,7 +86,10 @@ void	reset_snake(s_Tete	**Tete, int x, int y);
 void	ft_switch(int *a, int *b);
 
 // Fichier game_over.c
-void	 game_over(SDL_Window	**window, SDL_Renderer	**renderer, TTF_Font **font, SDL_bool *game_launched, SDL_bool *program_launched);
+void	 game_over(SDL_Window **window, SDL_Renderer **renderer, TTF_Font **font, SDL_bool *game_launched, SDL_bool *program_launched);
+
+// Fichier pause.c
+void	pause(SDL_Window **window, SDL_Renderer **renderer, TTF_Font **font, SDL_bool *game_launched, SDL_bool *program_launched);
 
 // Fichier score.c
 void	dessiner_score(SDL_Renderer	**renderer, SDL_Window **window, int pommesMangees, TTF_Font *font);
