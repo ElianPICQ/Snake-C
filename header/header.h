@@ -2,8 +2,9 @@
 	#define HEADER_H
 
 #include <stdio.h>
-#include <stdlib.h>		// exit()
-#include <time.h>
+#include <stdlib.h>		// exit(), itoa()
+#include <time.h>		// srand(), rand()
+#include <string.h>		// strncat()
 #include <SDL.h>
 #include <SDL_ttf.h>
 
@@ -73,7 +74,7 @@ int		checkPositionPomme(s_Pomme *Pomme, int i, s_Tete **Tete);
 void	dessiner_pommes(s_Tete **Tete, SDL_Renderer **renderer, SDL_Window **window, s_Pomme *Pomme, TTF_Font **font);
 
 // Fichier modifier_snake.c
-void	move_snake(s_Tete **Tete, int direction, SDL_bool *game_launched, s_Pomme *Pomme, int *pommesAManger, SDL_bool *is_game_over);
+void	move_snake(s_Tete **Tete, int direction, SDL_bool *game_launched, s_Pomme *Pomme, int *pommesAManger, SDL_bool *is_game_over, int *pommesMangees);
 void	dessiner_serpent(s_Tete **Tete, SDL_Renderer **renderer, SDL_Window **window, TTF_Font **font);
 
 s_Serpent	*create_elem(int x, int y);
@@ -86,6 +87,9 @@ void	ft_switch(int *a, int *b);
 
 // Fichier game_over.c
 void	 game_over(SDL_Window	**window, SDL_Renderer	**renderer, TTF_Font **font, SDL_bool *game_launched, SDL_bool *program_launched);
+
+// Fichier score.c
+void	dessiner_score(SDL_Renderer	**renderer, SDL_Window **window, int pommesMangees, TTF_Font *font);
 
 // Fichier gestion_erreur.c
 void	exitWithError_0(const char *message);
