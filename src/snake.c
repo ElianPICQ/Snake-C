@@ -52,7 +52,10 @@ void	snake_game()
 	int direction = 0; // Immobile
 	SDL_bool direction_changed = SDL_FALSE;	// Necessaire pour éviter que le serpent fasse demi tour instantanement (dans certains cas)
 	int vitesse = SLOW;
+//	int score = 0;
+	int pommesMangees = 0;
 
+	// Si besoin d'un itérateur
 	int i;
 
 	srand(time(NULL));	// Initialisation de srand
@@ -117,6 +120,9 @@ void	snake_game()
 
 			// Dessiner le Serpent dans Renderer
 			dessiner_serpent(&Tete, &renderer, &window, &font);
+
+			// Dessiner le score en dernier pour qu'il apparaisse au dessus de tout
+			dessiner_score(&renderer, &window, pommesMangees, font);
 
 			//On remet la couleur noir pour le fond
 			// Inutile avec le damier (Mode sans fond et avec dans les options du Jeu ?)
@@ -233,7 +239,7 @@ void	snake_game()
 				}
 			}
 			// Deplacer Snake
-			move_snake(&Tete, direction, &game_launched, Pomme, &pommesAManger, &is_game_over);
+			move_snake(&Tete, direction, &game_launched, Pomme, &pommesAManger, &is_game_over, &pommesMangees);
 
 			if (is_game_over)
 			{
