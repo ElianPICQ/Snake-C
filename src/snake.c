@@ -21,6 +21,10 @@ void	snake_game()
 	if (renderer == NULL)
 		exitWithError_2("Erreur : Creation rendu echoue", &window);
 
+	// Enable Blend mode (pour pouvoir changer l'alpha)
+	if (SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND) != 0)
+		exitWithError_3("Erreur : SDL_SetRenderDrawBlendMode a echoue", &window, &renderer);
+
 	// Initialisation de SDL_TTF
 	if (TTF_Init() != 0)
 		exitWithError_3("Erreur : Initialisation de SDL_TTF echouee", &window, &renderer);
