@@ -65,7 +65,7 @@ void	snake_game();
 //void	creer_damier(SDL_Window **window, SDL_Renderer	**renderer, SDL_Rect rectangle);
 
 // Fichier menu_principal.c
-void	menu_principal(SDL_Renderer	*renderer, TTF_Font *font, SDL_bool *program_launched, SDL_bool *game_launched);
+int		menu_principal(SDL_Renderer	*renderer, TTF_Font *font, SDL_bool *program_launched, SDL_bool *game_launched);
 
 // Fichier pomme.c
 void	initialise_pommes(s_Pomme *Pomme);
@@ -86,13 +86,13 @@ void	reset_snake(s_Tete	**Tete, int x, int y);
 void	ft_switch(int *a, int *b);
 
 // Fichier game_over.c
-void	 game_over(SDL_Window *window, SDL_Renderer *renderer, TTF_Font *font, SDL_bool *game_launched, SDL_bool *program_launched);
+int		game_over(SDL_Window *window, SDL_Renderer *renderer, TTF_Font *font, SDL_bool *game_launched, SDL_bool *program_launched);
 
 // Fichier pause.c
 void	pause(SDL_Window *window, SDL_Renderer *renderer, TTF_Font *font, SDL_bool *game_launched, SDL_bool *program_launched);
 
 // Fichier score.c
-void	dessiner_score(SDL_Renderer	*renderer, SDL_Window *window, int pommesMangees, TTF_Font *font);
+int		dessiner_score(SDL_Renderer	*renderer, SDL_Window *window, int pommesMangees, TTF_Font *font);
 
 // Fichier gestion_erreur.c
 void	exitWithError_0(const char *message);
@@ -101,6 +101,7 @@ void	exitWithError_2(const char *message, SDL_Window *window);
 void	exitWithError_3(const char *message, SDL_Window *window, SDL_Renderer *renderer);
 void	exitWithError_4(const char *message, SDL_Window *window, SDL_Renderer *renderer);
 void	exitWithError_5(const char *message, SDL_Window *window, SDL_Renderer *renderer, TTF_Font *font);
+void	exitWithError_noMsg(SDL_Window *window, SDL_Renderer *renderer, TTF_Font *font);
 
 
 #endif // HEADER_H

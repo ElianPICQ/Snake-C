@@ -93,7 +93,11 @@ void	snake_game()
 	{
 		// MENU PRINCIPAL
 		SDL_RenderClear(renderer);
-		menu_principal(renderer, font, &program_launched, &game_launched);
+		if (menu_principal(renderer, font, &program_launched, &game_launched) != 0)
+		{
+			// Free memory
+			exitWithError_noMsg(window, renderer, font);
+		}
 
 		// Charger la sauvegarde ou initialiser une nouvelle partie
 		if (load_from_save)
@@ -141,7 +145,11 @@ void	snake_game()
 			dessiner_serpent(&Tete, renderer, window, font);
 
 			// Dessiner le score en dernier pour qu'il apparaisse au dessus de tout
-			dessiner_score(renderer, window, pommesMangees, font);
+			if (dessiner_score(renderer, window, pommesMangees, font) != 0)
+			{
+				// Free memory
+				exitWithError_noMsg(window, renderer, font);
+			}
 
 			//On remet la couleur noir pour le fond
 			// Inutile avec le damier (Mode sans fond et avec dans les options du Jeu ?)
@@ -228,7 +236,13 @@ void	snake_game()
 
 			// BOUCLE DE PAUSE
 			if (game_paused)
-				pause(window, renderer, font, &game_launched, &program_launched);
+			{
+				if (pause(window, renderer, font, &game_launched, &program_launched) != 0)
+				{
+					// Free memory
+					exitWithError_noMsg(window, renderer, font);
+				}
+			}
 
 			// Deplacer Snake
 			move_snake(&Tete, direction, &game_launched, Pomme, &pommesAManger, &is_game_over, &pommesMangees);
@@ -236,7 +250,12 @@ void	snake_game()
 			if (is_game_over)
 			{
 				reset_snake(&Tete, ((WINDOW_WIDTH / SQUARE_SIZE) / 2) * SQUARE_SIZE,((WINDOW_HEIGHT / SQUARE_SIZE) / 2) * SQUARE_SIZE);
-				game_over(window, renderer, font, &game_launched, &program_launched);
+				
+				if (game_over(window, renderer, font, &game_launched, &program_launched) != 0)
+				{
+					// Free memory
+					exitWithError_noMsg(window, renderer, font);
+				}
 			}
 		}
 	}

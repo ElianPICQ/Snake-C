@@ -77,14 +77,21 @@ void	exitWithError_5(const char *message, SDL_Window *window, SDL_Renderer *rend
 	SDL_Quit();
 	exit(EXIT_FAILURE);
 }
-/*
-void	exitWithError(const char *message, SDL_Window **window, SDL_Renderer **renderer)
+
+// Comme ci dessus mais le message d'erreur est ecrit manuellement
+/* Utiliser si à été initialisé:
+ *	- La Police (TTF_Font *font)
+ *	- Le module TTF
+ *	- Le rendu (SDL_Renderer *renderer)
+ *	- La fenêtre (SDL_Window *window)
+ *	- La SDL
+*/
+void	exitWithError_noMsg(SDL_Window *window, SDL_Renderer *renderer, TTF_Font *font)
 {
-	SDL_Log("ERREUR : %s > %s", message, SDL_GetError());
-	SDL_DestroyRenderer(*renderer);
-	SDL_DestroyWindow(*window);
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
+	TTF_CloseFont(font);
 	TTF_Quit();
 	SDL_Quit();
 	exit(EXIT_FAILURE);
 }
-*/

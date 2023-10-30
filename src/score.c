@@ -1,7 +1,7 @@
 #include "../header/header.h"
 
 
-void	dessiner_score(SDL_Renderer	*renderer, SDL_Window *window, int pommesMangees, TTF_Font *font)
+int		dessiner_score(SDL_Renderer	*renderer, SDL_Window *window, int pommesMangees, TTF_Font *font)
 {
 	// Couleur du crayon
 	SDL_Color color = { 255, 255, 255 };
@@ -12,8 +12,26 @@ void	dessiner_score(SDL_Renderer	*renderer, SDL_Window *window, int pommesMangee
 	strncat(ScoreText, itoa(pommesMangees, asciiScore, 10), 4);
 
 	SDL_Surface *surface = TTF_RenderText_Solid(font, ScoreText, color);
+	if (surface == NULL)
+	{
+		SDL_Log("ERREUR : Impossible de créer la Surface > %s", SDL_GetError());
+		return (-1);
+	}
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-	SDL_QueryTexture(texture, NULL, NULL, &TextW, &TextH);
+	if (texture == NULL)
+	{
+		SDL_Log("ERREUR : Impossible de créer la Texture > %s", SDL_GetError());
+		return (-1);
+	}
+	if (SDL_QueryTexture(texture, NULL, NULL, &TextW, &TextH) != 0)
+	{
+		SDL_Log("ERREUR : La fonction SDL_QueryTexture a echoue > %s", SDL_GetError());
+		return (-1);
+	}
 	SDL_Rect dstrect = { 5, 3, TextW, TextH };
-	SDL_RenderCopy(renderer, texture, NULL, &dstrect);
+	if (SDL_RenderCopy(renderer, texture, NULL, &dstrect) != 0)
+	{
+		SDL_Log("ERREUR : La fonction SDL_RenderCopy a echoue > %s", SDL_GetError());
+		return (-1);
+	}
 }

@@ -2,7 +2,7 @@
 
 
 // Rendu du menu principal
-void	menu_principal(SDL_Renderer	*renderer, TTF_Font *font, SDL_bool *program_launched, SDL_bool *game_launched)
+int		menu_principal(SDL_Renderer	*renderer, TTF_Font *font, SDL_bool *program_launched, SDL_bool *game_launched)
 {
 	SDL_bool menu_principal = SDL_TRUE;
 	int playBtnW, playBtnH, quitBtnW, quitBtnH;
@@ -11,20 +11,56 @@ void	menu_principal(SDL_Renderer	*renderer, TTF_Font *font, SDL_bool *program_la
 	// Bouton Jouer
 	SDL_Color color = { 255, 255, 255 };
 	SDL_Surface *surface = TTF_RenderText_Solid(font, "JOUER AU SNAKE", color);
+	if (surface == NULL)
+	{
+		SDL_Log("ERREUR : Impossible de créer la Surface > %s", SDL_GetError());
+		return (-1);
+	}
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-	SDL_QueryTexture(texture, NULL, NULL, &playBtnW, &playBtnH);
+	if (texture == NULL)
+	{
+		SDL_Log("ERREUR : Impossible de créer la Texture > %s", SDL_GetError());
+		return (-1);
+	}
+	if (SDL_QueryTexture(texture, NULL, NULL, &playBtnW, &playBtnH) != 0)
+	{
+		SDL_Log("ERREUR : La fonction SDL_QueryTexture a echoue > %s", SDL_GetError());
+		return (-1);
+	}
 	SDL_Rect dstrect = { WINDOW_WIDTH / 2 - playBtnW / 2, WINDOW_HEIGHT / 2 - playBtnH / 2, playBtnW, playBtnH };
-	SDL_RenderCopy(renderer, texture, NULL, &dstrect);
+	if (SDL_RenderCopy(renderer, texture, NULL, &dstrect) != 0)
+	{
+		SDL_Log("ERREUR : La fonction SDL_RenderCopy a echoue > %s", SDL_GetError());
+		return (-1);
+	}
 
 	// Bouton Quitter
 	surface = TTF_RenderText_Solid(font, "QUITTER", color);
+	if (surface == NULL)
+	{
+		SDL_Log("ERREUR : Impossible de créer la Surface > %s", SDL_GetError());
+		return (-1);
+	}
 	texture = SDL_CreateTextureFromSurface(renderer, surface);
-	SDL_QueryTexture(texture, NULL, NULL, &quitBtnW, &quitBtnH);
+	if (texture == NULL)
+	{
+		SDL_Log("ERREUR : Impossible de créer la Texture > %s", SDL_GetError());
+		return (-1);
+	}
+	if (SDL_QueryTexture(texture, NULL, NULL, &quitBtnW, &quitBtnH) != 0)
+	{
+		SDL_Log("ERREUR : La fonction SDL_QueryTexture a echoue > %s", SDL_GetError());
+		return (-1);
+	}
 	dstrect.x = WINDOW_WIDTH / 2 - quitBtnW / 2;
 	dstrect.y = WINDOW_HEIGHT / 2 + playBtnH * 2;
 	dstrect.w = quitBtnW;
 	dstrect.h = quitBtnH;
-	SDL_RenderCopy(renderer, texture, NULL, &dstrect);
+	if (SDL_RenderCopy(renderer, texture, NULL, &dstrect) != 0)
+	{
+		SDL_Log("ERREUR : La fonction SDL_RenderCopy a echoue > %s", SDL_GetError());
+		return (-1);
+	}
 
 	SDL_RenderPresent(renderer);
 
@@ -81,4 +117,7 @@ void	menu_principal(SDL_Renderer	*renderer, TTF_Font *font, SDL_bool *program_la
 			}		
 		}
 	}
+
+	// Tout s'est bien passé -> 0
+	return (0);
 }

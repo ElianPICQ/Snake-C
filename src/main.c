@@ -17,21 +17,15 @@ int main(int argc, char **argv)
 
 // TRUCS A REGLER
 
-/* APPARITION DES POMMES BUGGE == + OU - DONE (essayer de reproduire les bugs)
- *
- *		-> La derniere pomme a parfois un HEIGHT cassé (et apparait avec 1 de largeur et bcp de hauteur)
- *			-> Il faut la manger par dessous pour que ca marche
- *			-> DONE
- *
- *		-> Toutes les pommes n'apparaissent pas apres avoir été mangées
- *			(i.e. 2 pommes apparaissent au lieu de 3)
- *
- *		-> Pommes qui disparait après en avoir mangé une autre ????
+/*
  *
  *
  */
 
 // TRUCS A FAIRE
+
+
+// SUPPRIMER LE CODE REDONDANT (cf: les menus)
 
 /*	BANDEAU SUPERIEUR POUR AFFICHER LES INFOS
  *		-> Bandeau de 50px? de hauteur sur toute la largeur dans lequel mettre le score & autres infos
@@ -40,6 +34,12 @@ int main(int argc, char **argv)
  *		-> Fichier menu_principal.c
  *		-> Fichier game_over.c
  *
+ *		=> Centraliser les appels à exitWithError()
+ *			-> Chaque fonction renvoie 0 si tout s'est bien passé.
+ *			-> Si il y a une erreur
+ *				-> Free() la memoire et fermer les modules alloués/ouverts dans la fonction
+ *				-> Return -1
+ *				-> Appel de exitWithError() depuis la fct principal qui ferme le reste des modules/free la mémoire
  *
  *
  *	POLICE

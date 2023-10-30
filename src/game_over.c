@@ -1,7 +1,7 @@
 #include "../header/header.h"
 
 
-void	 game_over(SDL_Window	*window, SDL_Renderer	*renderer, TTF_Font *font, SDL_bool *game_launched, SDL_bool *program_launched)
+int		game_over(SDL_Window	*window, SDL_Renderer	*renderer, TTF_Font *font, SDL_bool *game_launched, SDL_bool *program_launched)
 {
 	SDL_bool is_game_over = SDL_TRUE;
 	// Couleur du crayon
@@ -13,37 +13,98 @@ void	 game_over(SDL_Window	*window, SDL_Renderer	*renderer, TTF_Font *font, SDL_
 	// On reset l'affichage (ici écran noir)
 	if (SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE) != 0)
 	{
-//		delete_snake(&Tete);
-		exitWithError_5("Impossible de changer la couleur pour le rendu", window, renderer, font);
+		SDL_Log("ERREUR : Impossible de changer la couleur > %s", SDL_GetError());
+		return (-1);
 	}
-	SDL_RenderClear(renderer);
+
+	if (SDL_RenderClear(renderer) != 0)
+	{
+		SDL_Log("ERREUR : Impossible de changer la couleur > %s", SDL_GetError());
+		return (-1);
+	}
 
 	// Texte "Game Over"
 	SDL_Surface *surface = TTF_RenderText_Solid(font, "GAME OVER", color);
+	if (surface == NULL)
+	{
+		SDL_Log("ERREUR : Impossible de créer la Surface > %s", SDL_GetError());
+		return (-1);
+	}
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-	SDL_QueryTexture(texture, NULL, NULL, &TextW, &TextH);
+	if (texture == NULL)
+	{
+		SDL_Log("ERREUR : Impossible de créer la Texture > %s", SDL_GetError());
+		return (-1);
+	}
+
+	if (SDL_QueryTexture(texture, NULL, NULL, &TextW, &TextH) != 0)
+	{
+		SDL_Log("ERREUR : La fonction SDL_QueryTexture a echoue > %s", SDL_GetError());
+		return (-1);
+	}
 	SDL_Rect dstrect = { WINDOW_WIDTH / 2 - TextW / 2, WINDOW_HEIGHT / 3 - TextH / 2, TextW, TextH };
-	SDL_RenderCopy(renderer, texture, NULL, &dstrect);
+	
+	if (SDL_RenderCopy(renderer, texture, NULL, &dstrect) != 0)
+	{
+		SDL_Log("ERREUR : La fonction SDL_RenderCopy a echoue > %s", SDL_GetError());
+		return (-1);
+	}
 
 	// Bouton "Menu Principal"
 	surface = TTF_RenderText_Solid(font, "Menu Principal", color);
+	if (surface == NULL)
+	{
+		SDL_Log("ERREUR : Impossible de créer la Surface > %s", SDL_GetError());
+		return (-1);
+	}
 	texture = SDL_CreateTextureFromSurface(renderer, surface);
-	SDL_QueryTexture(texture, NULL, NULL, &TextW, &TextH);
+	if (texture == NULL)
+	{
+		SDL_Log("ERREUR : Impossible de créer la Texture > %s", SDL_GetError());
+		return (-1);
+	}
+	if (SDL_QueryTexture(texture, NULL, NULL, &TextW, &TextH) != 0)
+	{
+		SDL_Log("ERREUR : La fonction SDL_QueryTexture a echoue > %s", SDL_GetError());
+		return (-1);
+	}
 	dstrect.x = WINDOW_WIDTH / 4 - TextW / 2;
 	dstrect.y = WINDOW_HEIGHT / 3 + TextH * 2;
 	dstrect.w = TextW;
 	dstrect.h = TextH;
-	SDL_RenderCopy(renderer, texture, NULL, &dstrect);
+	if (SDL_RenderCopy(renderer, texture, NULL, &dstrect) != 0)
+	{
+		SDL_Log("ERREUR : La fonction SDL_RenderCopy a echoue > %s", SDL_GetError());
+		return (-1);
+	}
 
 	// Bouton "Quitter"
 	surface = TTF_RenderText_Solid(font, "Quitter", color);
+	if (surface == NULL)
+	{
+		SDL_Log("ERREUR : Impossible de créer la Surface > %s", SDL_GetError());
+		return (-1);
+	}
 	texture = SDL_CreateTextureFromSurface(renderer, surface);
-	SDL_QueryTexture(texture, NULL, NULL, &TextW, &TextH);
+	if (texture == NULL)
+	{
+		SDL_Log("ERREUR : Impossible de créer la Texture > %s", SDL_GetError());
+		return (-1);
+	}
+	if (SDL_QueryTexture(texture, NULL, NULL, &TextW, &TextH) != 0)
+	{
+		SDL_Log("ERREUR : La fonction SDL_QueryTexture a echoue > %s", SDL_GetError());
+		return (-1);
+	}
 	dstrect.x = (WINDOW_WIDTH - WINDOW_WIDTH / 4) - TextW / 2;
 	dstrect.y = WINDOW_HEIGHT / 3 + TextH * 2;
 	dstrect.w = TextW;
 	dstrect.h = TextH;
-	SDL_RenderCopy(renderer, texture, NULL, &dstrect);
+	if (SDL_RenderCopy(renderer, texture, NULL, &dstrect) != 0)
+	{
+		SDL_Log("ERREUR : La fonction SDL_RenderCopy a echoue > %s", SDL_GetError());
+		return (-1);
+	}	
 
 	SDL_RenderPresent(renderer);
 
