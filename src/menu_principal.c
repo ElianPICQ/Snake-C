@@ -4,64 +4,60 @@
 // Rendu du menu principal
 int		menu_principal(SDL_Renderer	*renderer, TTF_Font *font, SDL_bool *program_launched, SDL_bool *game_launched)
 {
+	int i = 0;
 	SDL_bool menu_principal = SDL_TRUE;
-	int playBtnW, playBtnH, quitBtnW, quitBtnH;
 	SDL_Event event;
+	SDL_Rect dstrect;
 
-	// Bouton Jouer
+	int nbBtn = 3;
+	int ecartBtn = 20;
+	char	*boutonTexte[] = {"MENU PRINCIPAL", "Lancer une partie", "Charger la sauvegarde", "Quitter", 0};
+	s_MenuBouton MenuBouton[4];
 	SDL_Color color = { 255, 255, 255 };
-	SDL_Surface *surface = TTF_RenderText_Solid(font, "JOUER AU SNAKE", color);
-	if (surface == NULL)
-	{
-		SDL_Log("ERREUR : Impossible de créer la Surface > %s", SDL_GetError());
-		return (-1);
-	}
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-	if (texture == NULL)
-	{
-		SDL_Log("ERREUR : Impossible de créer la Texture > %s", SDL_GetError());
-		return (-1);
-	}
-	if (SDL_QueryTexture(texture, NULL, NULL, &playBtnW, &playBtnH) != 0)
-	{
-		SDL_Log("ERREUR : La fonction SDL_QueryTexture a echoue > %s", SDL_GetError());
-		return (-1);
-	}
-	SDL_Rect dstrect = { WINDOW_WIDTH / 2 - playBtnW / 2, WINDOW_HEIGHT / 2 - playBtnH / 2, playBtnW, playBtnH };
-	if (SDL_RenderCopy(renderer, texture, NULL, &dstrect) != 0)
-	{
-		SDL_Log("ERREUR : La fonction SDL_RenderCopy a echoue > %s", SDL_GetError());
-		return (-1);
-	}
+	SDL_Surface *surface;
+	SDL_Texture *texture;
 
-	// Bouton Quitter
-	surface = TTF_RenderText_Solid(font, "QUITTER", color);
-	if (surface == NULL)
+	while (boutonTexte[i] != 0)
 	{
-		SDL_Log("ERREUR : Impossible de créer la Surface > %s", SDL_GetError());
-		return (-1);
-	}
-	texture = SDL_CreateTextureFromSurface(renderer, surface);
-	if (texture == NULL)
-	{
-		SDL_Log("ERREUR : Impossible de créer la Texture > %s", SDL_GetError());
-		return (-1);
-	}
-	if (SDL_QueryTexture(texture, NULL, NULL, &quitBtnW, &quitBtnH) != 0)
-	{
-		SDL_Log("ERREUR : La fonction SDL_QueryTexture a echoue > %s", SDL_GetError());
-		return (-1);
-	}
-	dstrect.x = WINDOW_WIDTH / 2 - quitBtnW / 2;
-	dstrect.y = WINDOW_HEIGHT / 2 + playBtnH * 2;
-	dstrect.w = quitBtnW;
-	dstrect.h = quitBtnH;
-	if (SDL_RenderCopy(renderer, texture, NULL, &dstrect) != 0)
-	{
-		SDL_Log("ERREUR : La fonction SDL_RenderCopy a echoue > %s", SDL_GetError());
-		return (-1);
-	}
+		surface = TTF_RenderText_Solid(font, boutonTexte[i], color);
+		if (surface == NULL)
+		{
+			SDL_Log("ERREUR : Impossible de créer la Surface > %s", SDL_GetError());
+			return (-1);
+		}
+		texture = SDL_CreateTextureFromSurface(renderer, surface);
+		if (texture == NULL)
+		{
+			SDL_Log("ERREUR : Impossible de créer la Texture > %s", SDL_GetError());
+			return (-1);
+		}
 
+		if (SDL_QueryTexture(texture, NULL, NULL, &MenuBouton[i].bouton.w, &MenuBouton[i].bouton.h) != 0)
+		{
+			SDL_Log("ERREUR : La fonction SDL_QueryTexture a echoue > %s", SDL_GetError());
+			return (-1);
+		}
+
+		if (i == 0)
+		{
+			MenuBouton[i].bouton.x = MenuBouton[i].bouton.h;
+			MenuBouton[i].bouton.y = MenuBouton[i].bouton.h;
+		}
+		else
+		{
+			MenuBouton[i].bouton.x = WINDOW_WIDTH / 2 - MenuBouton[i].bouton.w / 2;
+			MenuBouton[i].bouton.y = WINDOW_HEIGHT / 2 - (MenuBouton[i].bouton.h * nbBtn + ecartBtn * nbBtn) / 2 + (MenuBouton[i].bouton.h + ecartBtn) * (i - 1);
+		}
+		
+		if (SDL_RenderCopy(renderer, texture, NULL, &MenuBouton[i].bouton) != 0)
+		{
+			SDL_Log("ERREUR : La fonction SDL_RenderCopy a echoue > %s", SDL_GetError());
+			return (-1);
+		}
+
+		i++;
+	}
+	
 	SDL_RenderPresent(renderer);
 
 	SDL_DestroyTexture(texture);
@@ -96,20 +92,24 @@ int		menu_principal(SDL_Renderer	*renderer, TTF_Font *font, SDL_bool *program_la
 					}
 					break;
 
+				// Clic sur un Bouton
 				case SDL_MOUSEBUTTONDOWN:
 					// Bouton Jouer
-					if (WINDOW_WIDTH / 2 - playBtnW / 2 <= event.motion.x && event.motion.x <= WINDOW_WIDTH / 2 + playBtnW / 2
-						&& WINDOW_HEIGHT / 2 - playBtnH / 2 <= event.motion.y && event.motion.y <= WINDOW_HEIGHT / 2 + playBtnH / 2)
+					if (MenuBouton[1].bouton.x <= event.motion.x && event.motion.x <= MenuBouton[1].bouton.x + MenuBouton[1].bouton.w
+						&& MenuBouton[1].bouton.y <= event.motion.y && event.motion.y <= MenuBouton[1].bouton.y + MenuBouton[1].bouton.h)
 					{
-						menu_principal = SDL_FALSE;
-						*game_launched = SDL_TRUE;
+
+						printf("Jouer\n");
+//						menu_principal = SDL_FALSE;
+//						*game_launched = SDL_TRUE;
 					}
 					// Bouton Quitter
-					else if (WINDOW_WIDTH / 2 - quitBtnW / 2 <= event.motion.x && event.motion.x <= WINDOW_WIDTH / 2 + quitBtnW / 2
-						&& WINDOW_HEIGHT / 2 + playBtnH * 2 <= event.motion.y && event.motion.y <= WINDOW_HEIGHT / 2 + playBtnH * 2 + quitBtnH)
+					else if (MenuBouton[3].bouton.x <= event.motion.x && event.motion.x <= MenuBouton[3].bouton.x + MenuBouton[3].bouton.w
+						&& MenuBouton[3].bouton.y <= event.motion.y && event.motion.y <= MenuBouton[3].bouton.y + MenuBouton[3].bouton.h)
 					{
-						menu_principal = SDL_FALSE;
-						*program_launched = SDL_FALSE;
+						printf("Btn Quitter\n");
+//						menu_principal = SDL_FALSE;
+//						*program_launched = SDL_FALSE;
 					}
 					break;
 
