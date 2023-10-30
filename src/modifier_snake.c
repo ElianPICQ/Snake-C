@@ -205,19 +205,19 @@ void	move_snake(s_Tete **Tete, int direction, SDL_bool *game_launched, s_Pomme *
 }
 
 
-void	dessiner_serpent(s_Tete **Tete, SDL_Renderer **renderer, SDL_Window **window, TTF_Font **font)
+void	dessiner_serpent(s_Tete **Tete, SDL_Renderer *renderer, SDL_Window *window, TTF_Font *font)
 {
 	s_Serpent *Serpent;
 
 	Serpent = (*Tete)->premier;
 
 	// On dessine la Tete d'une couleur légèrement différente
-	if (SDL_SetRenderDrawColor(*renderer, 35, 255, 35, SDL_ALPHA_OPAQUE) != 0)
+	if (SDL_SetRenderDrawColor(renderer, 35, 255, 35, SDL_ALPHA_OPAQUE) != 0)
 	{
 		delete_snake(Tete);
 		exitWithError_5("Impossible de changer la couleur pour le Serpent", window, renderer, font);
 	}
-	if (SDL_RenderFillRect(*renderer, &Serpent->morceauCorps) != 0)
+	if (SDL_RenderFillRect(renderer, &Serpent->morceauCorps) != 0)
 	{
 		delete_snake(Tete);
 		exitWithError_5("Impossible de dessiner le rectangle", window, renderer, font);
@@ -225,14 +225,14 @@ void	dessiner_serpent(s_Tete **Tete, SDL_Renderer **renderer, SDL_Window **windo
 	Serpent = Serpent->suivant;
 
 	// On dessine le reste du serpent
-	if (SDL_SetRenderDrawColor(*renderer, 150, 255, 50, SDL_ALPHA_OPAQUE) != 0)
+	if (SDL_SetRenderDrawColor(renderer, 150, 255, 50, SDL_ALPHA_OPAQUE) != 0)
 	{
 		delete_snake(Tete);
 		exitWithError_5("Impossible de changer la couleur pour le Serpent", window, renderer, font);
 	}
 	while (Serpent != NULL)
 	{
-		if (SDL_RenderFillRect(*renderer, &Serpent->morceauCorps) != 0)
+		if (SDL_RenderFillRect(renderer, &Serpent->morceauCorps) != 0)
 		{
 			delete_snake(Tete);
 			exitWithError_5("Impossible de dessiner le rectangle", window, renderer, font);

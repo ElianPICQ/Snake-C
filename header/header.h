@@ -65,17 +65,17 @@ void	snake_game();
 //void	creer_damier(SDL_Window **window, SDL_Renderer	**renderer, SDL_Rect rectangle);
 
 // Fichier menu_principal.c
-void	menu_principal(SDL_Renderer	**renderer, TTF_Font **font, SDL_bool *program_launched, SDL_bool *game_launched);
+void	menu_principal(SDL_Renderer	*renderer, TTF_Font *font, SDL_bool *program_launched, SDL_bool *game_launched);
 
 // Fichier pomme.c
 void	initialise_pommes(s_Pomme *Pomme);
-void	placer_pommes(s_Tete **Tete, SDL_Renderer **renderer, SDL_Window **window, s_Pomme *Pomme);
+void	placer_pommes(s_Tete **Tete, s_Pomme *Pomme);
 int		checkPositionPomme(s_Pomme *Pomme, int i, s_Tete **Tete);
-void	dessiner_pommes(s_Tete **Tete, SDL_Renderer **renderer, SDL_Window **window, s_Pomme *Pomme, TTF_Font **font);
+void	dessiner_pommes(s_Tete **Tete, SDL_Renderer *renderer, SDL_Window *window, s_Pomme *Pomme, TTF_Font *font);
 
 // Fichier modifier_snake.c
 void	move_snake(s_Tete **Tete, int direction, SDL_bool *game_launched, s_Pomme *Pomme, int *pommesAManger, SDL_bool *is_game_over, int *pommesMangees);
-void	dessiner_serpent(s_Tete **Tete, SDL_Renderer **renderer, SDL_Window **window, TTF_Font **font);
+void	dessiner_serpent(s_Tete **Tete, SDL_Renderer *renderer, SDL_Window *window, TTF_Font *font);
 
 s_Serpent	*create_elem(int x, int y);
 void	list_push_front(s_Tete	**s_Tete, int x, int y);
@@ -86,21 +86,21 @@ void	reset_snake(s_Tete	**Tete, int x, int y);
 void	ft_switch(int *a, int *b);
 
 // Fichier game_over.c
-void	 game_over(SDL_Window **window, SDL_Renderer **renderer, TTF_Font **font, SDL_bool *game_launched, SDL_bool *program_launched);
+void	 game_over(SDL_Window *window, SDL_Renderer *renderer, TTF_Font *font, SDL_bool *game_launched, SDL_bool *program_launched);
 
 // Fichier pause.c
-void	pause(SDL_Window **window, SDL_Renderer **renderer, TTF_Font **font, SDL_bool *game_launched, SDL_bool *program_launched);
+void	pause(SDL_Window *window, SDL_Renderer *renderer, TTF_Font *font, SDL_bool *game_launched, SDL_bool *program_launched);
 
 // Fichier score.c
-void	dessiner_score(SDL_Renderer	**renderer, SDL_Window **window, int pommesMangees, TTF_Font *font);
+void	dessiner_score(SDL_Renderer	*renderer, SDL_Window *window, int pommesMangees, TTF_Font *font);
 
 // Fichier gestion_erreur.c
 void	exitWithError_0(const char *message);
 void	exitWithError_1(const char *message);
-void	exitWithError_2(const char *message, SDL_Window **window);
-void	exitWithError_3(const char *message, SDL_Window **window, SDL_Renderer **renderer);
-void	exitWithError_4(const char *message, SDL_Window **window, SDL_Renderer **renderer);
-void	exitWithError_5(const char *message, SDL_Window **window, SDL_Renderer **renderer, TTF_Font **font);
+void	exitWithError_2(const char *message, SDL_Window *window);
+void	exitWithError_3(const char *message, SDL_Window *window, SDL_Renderer *renderer);
+void	exitWithError_4(const char *message, SDL_Window *window, SDL_Renderer *renderer);
+void	exitWithError_5(const char *message, SDL_Window *window, SDL_Renderer *renderer, TTF_Font *font);
 
 
 #endif // HEADER_H

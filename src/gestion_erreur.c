@@ -22,10 +22,10 @@ void	exitWithError_1(const char *message)
  *	- La fenêtre (SDL_Window *window)
  *	- La SDL
 */
-void	exitWithError_2(const char *message, SDL_Window **window)
+void	exitWithError_2(const char *message, SDL_Window *window)
 {
 	SDL_Log("ERREUR : %s > %s", message, SDL_GetError());
-	SDL_DestroyWindow(*window);
+	SDL_DestroyWindow(window);
 	SDL_Quit();
 	exit(EXIT_FAILURE);
 }
@@ -35,11 +35,11 @@ void	exitWithError_2(const char *message, SDL_Window **window)
  *	- La fenêtre (SDL_Window *window)
  *	- La SDL
 */
-void	exitWithError_3(const char *message, SDL_Window **window, SDL_Renderer **renderer)
+void	exitWithError_3(const char *message, SDL_Window *window, SDL_Renderer *renderer)
 {
 	SDL_Log("ERREUR : %s > %s", message, SDL_GetError());
-	SDL_DestroyRenderer(*renderer);
-	SDL_DestroyWindow(*window);
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
 	SDL_Quit();
 	exit(EXIT_FAILURE);
 }
@@ -50,11 +50,11 @@ void	exitWithError_3(const char *message, SDL_Window **window, SDL_Renderer **re
  *	- La fenêtre (SDL_Window *window)
  *	- La SDL
 */
-void	exitWithError_4(const char *message, SDL_Window **window, SDL_Renderer **renderer)
+void	exitWithError_4(const char *message, SDL_Window *window, SDL_Renderer *renderer)
 {
 	SDL_Log("ERREUR : %s > %s", message, SDL_GetError());
-	SDL_DestroyRenderer(*renderer);
-	SDL_DestroyWindow(*window);
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
 	TTF_Quit();
 	SDL_Quit();
 	exit(EXIT_FAILURE);
@@ -67,12 +67,12 @@ void	exitWithError_4(const char *message, SDL_Window **window, SDL_Renderer **re
  *	- La fenêtre (SDL_Window *window)
  *	- La SDL
 */
-void	exitWithError_5(const char *message, SDL_Window **window, SDL_Renderer **renderer, TTF_Font **font)
+void	exitWithError_5(const char *message, SDL_Window *window, SDL_Renderer *renderer, TTF_Font *font)
 {
 	SDL_Log("ERREUR : %s > %s", message, SDL_GetError());
-	SDL_DestroyRenderer(*renderer);
-	SDL_DestroyWindow(*window);
-	TTF_CloseFont(*font);
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
+	TTF_CloseFont(font);
 	TTF_Quit();
 	SDL_Quit();
 	exit(EXIT_FAILURE);

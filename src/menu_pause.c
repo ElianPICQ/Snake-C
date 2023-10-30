@@ -1,7 +1,7 @@
 #include "../header/header.h"
 
 
-void	pause(SDL_Window	**window, SDL_Renderer	**renderer, TTF_Font **font, SDL_bool *game_launched, SDL_bool *program_launched)
+void	pause(SDL_Window	*window, SDL_Renderer	*renderer, TTF_Font *font, SDL_bool *game_launched, SDL_bool *program_launched)
 {
 	SDL_bool game_paused = SDL_TRUE;
 	// Couleur du crayon
@@ -12,53 +12,53 @@ void	pause(SDL_Window	**window, SDL_Renderer	**renderer, TTF_Font **font, SDL_bo
 	SDL_Rect dstrect = {WINDOW_WIDTH / 2 - WINDOW_WIDTH / 4, WINDOW_HEIGHT / 2 - (WINDOW_HEIGHT / 2 + WINDOW_HEIGHT / 4) / 2, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + WINDOW_HEIGHT / 4};
 
 	// On met tout dans un rectangle noir qui ne prend pas tout l'écran
-	if (SDL_SetRenderDrawColor(*renderer, 50, 50, 50, 170) != 0)
+	if (SDL_SetRenderDrawColor(renderer, 50, 50, 50, 170) != 0)
 		exitWithError_5("Impossible de changer la couleur pour le menu Pause", window, renderer, font);
 
-	if (SDL_RenderFillRect(*renderer, &dstrect) != 0)
+	if (SDL_RenderFillRect(renderer, &dstrect) != 0)
 		exitWithError_5("Impossible de dessiner le fond du menu Pause", window, renderer, font);
 
 	// Texte "Pause"
-	SDL_Surface *surface = TTF_RenderText_Solid(*font, "PAUSE", color);
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(*renderer, surface);
+	SDL_Surface *surface = TTF_RenderText_Solid(font, "PAUSE", color);
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_QueryTexture(texture, NULL, NULL, &TextW, &TextH);
 	dstrect.x = WINDOW_WIDTH / 2 - TextW / 2;
 	dstrect.y = WINDOW_HEIGHT / 3 - TextH / 2;
 	dstrect.w = TextW;
 	dstrect.h = TextH;
-	SDL_RenderCopy(*renderer, texture, NULL, &dstrect);
+	SDL_RenderCopy(renderer, texture, NULL, &dstrect);
 
 	// Bouton "Continuer"
-	surface = TTF_RenderText_Solid(*font, "Continuer", color);
-	texture = SDL_CreateTextureFromSurface(*renderer, surface);
+	surface = TTF_RenderText_Solid(font, "Continuer", color);
+	texture = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_QueryTexture(texture, NULL, NULL, &TextW, &TextH);
 	dstrect.x = WINDOW_WIDTH / 2 - TextW / 2;
 	dstrect.y = WINDOW_HEIGHT / 3 + TextH;
 	dstrect.w = TextW;
 	dstrect.h = TextH;
-	SDL_RenderCopy(*renderer, texture, NULL, &dstrect);
+	SDL_RenderCopy(renderer, texture, NULL, &dstrect);
 
 	// Bouton "Sauvegarder"
-	surface = TTF_RenderText_Solid(*font, "Sauvegarder", color);
-	texture = SDL_CreateTextureFromSurface(*renderer, surface);
+	surface = TTF_RenderText_Solid(font, "Sauvegarder", color);
+	texture = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_QueryTexture(texture, NULL, NULL, &TextW, &TextH);
 	dstrect.x = WINDOW_WIDTH / 2 - TextW / 2;
 	dstrect.y = WINDOW_HEIGHT / 3 + TextH * 2;
 	dstrect.w = TextW;
 	dstrect.h = TextH;
-	SDL_RenderCopy(*renderer, texture, NULL, &dstrect);
+	SDL_RenderCopy(renderer, texture, NULL, &dstrect);
 
 	// Bouton "Quitter"
-	surface = TTF_RenderText_Solid(*font, "Quitter", color);
-	texture = SDL_CreateTextureFromSurface(*renderer, surface);
+	surface = TTF_RenderText_Solid(font, "Quitter", color);
+	texture = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_QueryTexture(texture, NULL, NULL, &TextW, &TextH);
 	dstrect.x = WINDOW_WIDTH / 2 - TextW / 2;
 	dstrect.y = WINDOW_HEIGHT / 3 + TextH * 3;
 	dstrect.w = TextW;
 	dstrect.h = TextH;
-	SDL_RenderCopy(*renderer, texture, NULL, &dstrect);
+	SDL_RenderCopy(renderer, texture, NULL, &dstrect);
 
-	SDL_RenderPresent(*renderer);
+	SDL_RenderPresent(renderer);
 
 	SDL_DestroyTexture(texture);
 	SDL_FreeSurface(surface);
@@ -116,6 +116,6 @@ void	pause(SDL_Window	**window, SDL_Renderer	**renderer, TTF_Font **font, SDL_bo
 		}
 	}
 
-	if (SDL_SetRenderDrawColor(*renderer, 0, 0, 0, SDL_ALPHA_OPAQUE) != 0)
+	if (SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE) != 0)
 		exitWithError_5("Impossible de changer la couleur pour le menu Pause", window, renderer, font);
 }

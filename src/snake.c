@@ -19,20 +19,20 @@ void	snake_game()
 	// Création du rendu
 	renderer = SDL_CreateRenderer(window, -1, 0);
 	if (renderer == NULL)
-		exitWithError_2("Erreur : Creation rendu echoue", &window);
+		exitWithError_2("Erreur : Creation rendu echoue", window);
 
 	// Enable Blend mode (pour pouvoir changer l'alpha)
 	if (SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND) != 0)
-		exitWithError_3("Erreur : SDL_SetRenderDrawBlendMode a echoue", &window, &renderer);
+		exitWithError_3("Erreur : SDL_SetRenderDrawBlendMode a echoue", window, renderer);
 
 	// Initialisation de SDL_TTF
 	if (TTF_Init() != 0)
-		exitWithError_3("Erreur : Initialisation de SDL_TTF echouee", &window, &renderer);
+		exitWithError_3("Erreur : Initialisation de SDL_TTF echouee", window, renderer);
 
 	// Ouverture d'une police - Ici Arial (Utiliser la police Windows)
 	TTF_Font *font = TTF_OpenFont("fonts/arial.ttf", 25);
 	if (font == NULL)
-		exitWithError_4("Erreur : Impossible de changer la police", &window, &renderer);
+		exitWithError_4("Erreur : Impossible de changer la police", window, renderer);
 
 	/*---------------------------------- Execution du Programme  -------------------------------------------*/
 
@@ -74,7 +74,7 @@ void	snake_game()
 	Tete->premier = Serpent;
 
 	if (Tete == NULL || Serpent == NULL)
-		exitWithError_5("Erreur lors de la creation de Tete ou Serpent\n", &window, &renderer, &font);
+		exitWithError_5("Erreur lors de la creation de Tete ou Serpent\n", window, renderer, font);
 	
 	
 
@@ -82,6 +82,7 @@ void	snake_game()
 	// et en afficher à nouveau
 	s_Pomme Pomme[NB_POMMES];
 
+	// Nombre de pommes restant avant d'en affichier de nouvelles
 	int pommesAManger;
 
 
@@ -92,7 +93,7 @@ void	snake_game()
 	{
 		// MENU PRINCIPAL
 		SDL_RenderClear(renderer);
-		menu_principal(&renderer, &font, &program_launched, &game_launched);
+		menu_principal(renderer, font, &program_launched, &game_launched);
 
 		// Charger la sauvegarde ou initialiser une nouvelle partie
 		if (load_from_save)
@@ -106,12 +107,14 @@ void	snake_game()
 				list_push_back(&Tete);
 
 			pommesAManger = 0;
+			pommesMangees = 0;
 			initialise_pommes(Pomme);		
 		}
 
 		// On met les variables à leur état initial avant de (re)lancer la partie
 		is_game_over = SDL_FALSE;
 		game_paused = SDL_FALSE;
+
 		direction = 0;
 		vitesse = SLOW;
 
@@ -128,24 +131,24 @@ void	snake_game()
 			// Replacer les pommes si elles ont toutes été mangées
 			if (pommesAManger == 0)
 			{
-				placer_pommes(&Tete, &renderer, &window, Pomme);
+				placer_pommes(&Tete, Pomme);
 				pommesAManger = NB_POMMES;
 			}
 			// Dessiner les pommes dans Renderer
-			dessiner_pommes(&Tete, &renderer, &window, Pomme, &font);
+			dessiner_pommes(&Tete, renderer, window, Pomme, font);
 
 			// Dessiner le Serpent dans Renderer
-			dessiner_serpent(&Tete, &renderer, &window, &font);
+			dessiner_serpent(&Tete, renderer, window, font);
 
 			// Dessiner le score en dernier pour qu'il apparaisse au dessus de tout
-			dessiner_score(&renderer, &window, pommesMangees, font);
+			dessiner_score(renderer, window, pommesMangees, font);
 
 			//On remet la couleur noir pour le fond
 			// Inutile avec le damier (Mode sans fond et avec dans les options du Jeu ?)
 			if (SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE) != 0)
 			{
 				delete_snake(&Tete);
-				exitWithError_5("Impossible de changer la couleur pour le rendu", &window, &renderer, &font);
+				exitWithError_5("Impossible de changer la couleur pour le rendu", window, renderer, font);
 			}
 
 			SDL_RenderPresent(renderer);
@@ -225,45 +228,15 @@ void	snake_game()
 
 			// BOUCLE DE PAUSE
 			if (game_paused)
-				pause(&window, &renderer, &font, &game_launched, &program_launched);
-/*
-			while (game_paused)
-			{
-				while (SDL_PollEvent(&event))
-				{
-					switch(event.type)
-					{
-						// Croix de fermeture
-						case SDL_QUIT:
-							game_paused = SDL_FALSE;
-							game_launched = SDL_FALSE;
-							program_launched = SDL_FALSE;
-							break;
+				pause(window, renderer, font, &game_launched, &program_launched);
 
-						// Event clavier
-						case SDL_KEYDOWN:
-							switch(event.key.keysym.sym)
-							{
-								// Quitter le programme -> Changer "Menu Pause"
-								case SDLK_ESCAPE:
-									game_paused = SDL_FALSE;
-									break;
-
-								default: break;
-							}
-							break;
-
-						default: break;
-					}
-				}
-			}*/
 			// Deplacer Snake
 			move_snake(&Tete, direction, &game_launched, Pomme, &pommesAManger, &is_game_over, &pommesMangees);
 
 			if (is_game_over)
 			{
 				reset_snake(&Tete, ((WINDOW_WIDTH / SQUARE_SIZE) / 2) * SQUARE_SIZE,((WINDOW_HEIGHT / SQUARE_SIZE) / 2) * SQUARE_SIZE);
-				game_over(&window, &renderer, &font, &game_launched, &program_launched);
+				game_over(window, renderer, font, &game_launched, &program_launched);
 			}
 		}
 	}

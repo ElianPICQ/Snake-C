@@ -2,7 +2,7 @@
 
 
 // Rendu du menu principal
-void	menu_principal(SDL_Renderer	**renderer, TTF_Font **font, SDL_bool *program_launched, SDL_bool *game_launched)
+void	menu_principal(SDL_Renderer	*renderer, TTF_Font *font, SDL_bool *program_launched, SDL_bool *game_launched)
 {
 	SDL_bool menu_principal = SDL_TRUE;
 	int playBtnW, playBtnH, quitBtnW, quitBtnH;
@@ -10,23 +10,23 @@ void	menu_principal(SDL_Renderer	**renderer, TTF_Font **font, SDL_bool *program_
 
 	// Bouton Jouer
 	SDL_Color color = { 255, 255, 255 };
-	SDL_Surface *surface = TTF_RenderText_Solid(*font, "JOUER AU SNAKE", color);
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(*renderer, surface);
+	SDL_Surface *surface = TTF_RenderText_Solid(font, "JOUER AU SNAKE", color);
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_QueryTexture(texture, NULL, NULL, &playBtnW, &playBtnH);
 	SDL_Rect dstrect = { WINDOW_WIDTH / 2 - playBtnW / 2, WINDOW_HEIGHT / 2 - playBtnH / 2, playBtnW, playBtnH };
-	SDL_RenderCopy(*renderer, texture, NULL, &dstrect);
+	SDL_RenderCopy(renderer, texture, NULL, &dstrect);
 
 	// Bouton Quitter
-	surface = TTF_RenderText_Solid(*font, "QUITTER", color);
-	texture = SDL_CreateTextureFromSurface(*renderer, surface);
+	surface = TTF_RenderText_Solid(font, "QUITTER", color);
+	texture = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_QueryTexture(texture, NULL, NULL, &quitBtnW, &quitBtnH);
 	dstrect.x = WINDOW_WIDTH / 2 - quitBtnW / 2;
 	dstrect.y = WINDOW_HEIGHT / 2 + playBtnH * 2;
 	dstrect.w = quitBtnW;
 	dstrect.h = quitBtnH;
-	SDL_RenderCopy(*renderer, texture, NULL, &dstrect);
+	SDL_RenderCopy(renderer, texture, NULL, &dstrect);
 
-	SDL_RenderPresent(*renderer);
+	SDL_RenderPresent(renderer);
 
 	SDL_DestroyTexture(texture);
 	SDL_FreeSurface(surface);
