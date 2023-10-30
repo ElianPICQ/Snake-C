@@ -1,7 +1,7 @@
 #include "../header/header.h"
 
 
-void	pause(SDL_Window	*window, SDL_Renderer	*renderer, TTF_Font *font, SDL_bool *game_launched, SDL_bool *program_launched)
+int		pause(SDL_Window	*window, SDL_Renderer	*renderer, TTF_Font *font, SDL_bool *game_launched, SDL_bool *program_launched)
 {
 	SDL_bool game_paused = SDL_TRUE;
 	// Couleur du crayon
@@ -168,7 +168,8 @@ void	pause(SDL_Window	*window, SDL_Renderer	*renderer, TTF_Font *font, SDL_bool 
 					if (WINDOW_WIDTH / 2 - TextW / 2 <= event.motion.x && event.motion.x <= WINDOW_WIDTH / 2 + TextW / 2
 						&& WINDOW_HEIGHT / 3 + TextH <= event.motion.y && event.motion.y <= WINDOW_HEIGHT / 3 + TextH * 2)
 					{
-						game_paused = SDL_FALSE;
+						printf("Bouton Continuer\n");
+					//	game_paused = SDL_FALSE;
 					}
 					// Bouton Sauvegarder
 					else if (WINDOW_WIDTH / 2 - TextW / 2 <= event.motion.x && event.motion.x <= WINDOW_WIDTH / 2 + TextW / 2
@@ -180,9 +181,10 @@ void	pause(SDL_Window	*window, SDL_Renderer	*renderer, TTF_Font *font, SDL_bool 
 					else if (WINDOW_WIDTH / 2 - TextW / 2 <= event.motion.x && event.motion.x <= WINDOW_WIDTH / 2 + TextW / 2
 						&& WINDOW_HEIGHT / 3 + TextH * 3 <= event.motion.y && event.motion.y <= WINDOW_HEIGHT / 3 + TextH * 3 + TextH)
 					{
-						game_paused = SDL_FALSE;
-						*game_launched = SDL_FALSE;
-						*program_launched = SDL_FALSE;
+						printf("Bouton Quitter\n");
+//						game_paused = SDL_FALSE;
+//						*game_launched = SDL_FALSE;
+//						*program_launched = SDL_FALSE;
 					}
 
 				default: break;
