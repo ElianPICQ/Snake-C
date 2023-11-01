@@ -46,16 +46,13 @@ typedef struct Pomme s_Pomme;
 struct Pomme
 {
 	SDL_Rect infoPomme;
+};
 
-//	s_Pomme	*suivant;
+// Stock les taille des boutons de menu
+typedef struct MenuBouton s_MenuBouton;
+struct MenuBouton {
+	SDL_Rect bouton;
 };
-/*
-typedef struct PremierePomme s_PremierePomme;
-struct PremierePomme
-{
-	s_Pomme	*premier;
-};
-*/
 
 // Prototypes des fonctions
 // Fichier snake.c
@@ -89,7 +86,7 @@ void	ft_switch(int *a, int *b);
 int		game_over(SDL_Window *window, SDL_Renderer *renderer, TTF_Font *font, SDL_bool *game_launched, SDL_bool *program_launched);
 
 // Fichier pause.c
-void	pause(SDL_Window *window, SDL_Renderer *renderer, TTF_Font *font, SDL_bool *game_launched, SDL_bool *program_launched);
+int		pause(SDL_Window *window, SDL_Renderer *renderer, TTF_Font *font, SDL_bool *game_launched, SDL_bool *program_launched);
 
 // Fichier score.c
 int		dessiner_score(SDL_Renderer	*renderer, SDL_Window *window, int pommesMangees, TTF_Font *font);
