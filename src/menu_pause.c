@@ -1,136 +1,71 @@
 #include "../header/header.h"
 
 
-int		pause(SDL_Window	*window, SDL_Renderer	*renderer, TTF_Font *font, SDL_bool *game_launched, SDL_bool *program_launched)
+int		pause(SDL_Window	*window, SDL_Renderer	*renderer, TTF_Font *font, s_Game *Game)
 {
+	int i = 0;
 	SDL_bool game_paused = SDL_TRUE;
-	// Couleur du crayon
-	SDL_Color color = { 255, 255, 255 };
-	// Taille des boites de texte
-	int TextW, TextH;
 	SDL_Event event;
 	SDL_Rect dstrect = {WINDOW_WIDTH / 2 - WINDOW_WIDTH / 4, WINDOW_HEIGHT / 2 - (WINDOW_HEIGHT / 2 + WINDOW_HEIGHT / 4) / 2, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + WINDOW_HEIGHT / 4};
 
-	// On met tout dans un rectangle noir qui ne prend pas tout l'écran
+	char	*boutonTexte[] = {"PAUSE", "Continuer", "Sauvegarder", "Quitter", 0};
+	int nbBtn = 0;
+
+	while (boutonTexte[nbBtn] != 0)
+		nbBtn++;
+
+	int ecartBtn = 20;
+	s_MenuBouton MenuBouton[nbBtn];
+	SDL_Color color = { 255, 255, 255 };
+	SDL_Surface *surface;
+	SDL_Texture *texture;
+
+
+	// On met tout dans un rectangle transparent qui ne prend pas tout l'écran
 	if (SDL_SetRenderDrawColor(renderer, 50, 50, 50, 170) != 0)
 	{
 		SDL_Log("ERREUR : Impossible de changer la couleur pour le menu Pause > %s", SDL_GetError());
 		return (-1);
 	}
-
 	if (SDL_RenderFillRect(renderer, &dstrect) != 0)
 	{
 		SDL_Log("ERREUR : Impossible de creer le fond du menu Pause > %s", SDL_GetError());
 		return (-1);
 	}
 
-	// Texte "Pause"
-	SDL_Surface *surface = TTF_RenderText_Solid(font, "PAUSE", color);
-	if (surface == NULL)
+	while (boutonTexte[i] != 0)
 	{
-		SDL_Log("ERREUR : Impossible de créer la Surface > %s", SDL_GetError());
-		return (-1);
-	}
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-	if (texture == NULL)
-	{
-		SDL_Log("ERREUR : Impossible de créer la Texture > %s", SDL_GetError());
-		return (-1);
-	}
-	if (SDL_QueryTexture(texture, NULL, NULL, &TextW, &TextH) != 0)
-	{
-		SDL_Log("ERREUR : La fonction SDL_QueryTexture a echoue > %s", SDL_GetError());
-		return (-1);
-	}
-	dstrect.x = WINDOW_WIDTH / 2 - TextW / 2;
-	dstrect.y = WINDOW_HEIGHT / 3 - TextH / 2;
-	dstrect.w = TextW;
-	dstrect.h = TextH;
-	if (SDL_RenderCopy(renderer, texture, NULL, &dstrect) != 0)
-	{
-		SDL_Log("ERREUR : La fonction SDL_RenderCopy a echoue > %s", SDL_GetError());
-		return (-1);
-	}
+		surface = TTF_RenderText_Solid(font, boutonTexte[i], color);
+		if (surface == NULL)
+		{
+			SDL_Log("ERREUR : Impossible de créer la Surface > %s", SDL_GetError());
+			return (-1);
+		}
+		texture = SDL_CreateTextureFromSurface(renderer, surface);
+		if (texture == NULL)
+		{
+			SDL_Log("ERREUR : Impossible de créer la Texture > %s", SDL_GetError());
+			return (-1);
+		}
 
-	// Bouton "Continuer"
-	surface = TTF_RenderText_Solid(font, "Continuer", color);
-	if (surface == NULL)
-	{
-		SDL_Log("ERREUR : Impossible de créer la Surface > %s", SDL_GetError());
-		return (-1);
-	}
-	texture = SDL_CreateTextureFromSurface(renderer, surface);
-	if (texture == NULL)
-	{
-		SDL_Log("ERREUR : Impossible de créer la Texture > %s", SDL_GetError());
-		return (-1);
-	}
-	if (SDL_QueryTexture(texture, NULL, NULL, &TextW, &TextH) != 0)
-	{
-		SDL_Log("ERREUR : La fonction SDL_QueryTexture a echoue > %s", SDL_GetError());
-		return (-1);
-	}
-	dstrect.x = WINDOW_WIDTH / 2 - TextW / 2;
-	dstrect.y = WINDOW_HEIGHT / 3 + TextH;
-	dstrect.w = TextW;
-	dstrect.h = TextH;
-	if (SDL_RenderCopy(renderer, texture, NULL, &dstrect) != 0)
-	{
-		SDL_Log("ERREUR : La fonction SDL_RenderCopy a echoue > %s", SDL_GetError());
-		return (-1);
-	}
+		if (SDL_QueryTexture(texture, NULL, NULL, &MenuBouton[i].bouton.w, &MenuBouton[i].bouton.h) != 0)
+		{
+			SDL_Log("ERREUR : La fonction SDL_QueryTexture a echoue > %s", SDL_GetError());
+			return (-1);
+		}
 
-	// Bouton "Sauvegarder"
-	surface = TTF_RenderText_Solid(font, "Sauvegarder", color);
-	if (surface == NULL)
-	{
-		SDL_Log("ERREUR : Impossible de créer la Surface > %s", SDL_GetError());
-		return (-1);
-	}
-	texture = SDL_CreateTextureFromSurface(renderer, surface);
-	if (texture == NULL)
-	{
-		SDL_Log("ERREUR : Impossible de créer la Texture > %s", SDL_GetError());
-		return (-1);
-	}
-	if (SDL_QueryTexture(texture, NULL, NULL, &TextW, &TextH) != 0)
-	{
-		SDL_Log("ERREUR : La fonction SDL_QueryTexture a echoue > %s", SDL_GetError());
-		return (-1);
-	}
-	dstrect.x = WINDOW_WIDTH / 2 - TextW / 2;
-	dstrect.y = WINDOW_HEIGHT / 3 + TextH * 2;
-	dstrect.w = TextW;
-	dstrect.h = TextH;
-	if (SDL_RenderCopy(renderer, texture, NULL, &dstrect) != 0)
-	{
-		SDL_Log("ERREUR : La fonction SDL_RenderCopy a echoue > %s", SDL_GetError());
-		return (-1);
-	}
+		// Centrer tous les boutons
+		MenuBouton[i].bouton.x = WINDOW_WIDTH / 2 - MenuBouton[i].bouton.w / 2;
+		MenuBouton[i].bouton.y = WINDOW_HEIGHT / 2 - (MenuBouton[i].bouton.h * nbBtn + ecartBtn * nbBtn) / 2 + (MenuBouton[i].bouton.h + ecartBtn) * (i - 1);
+		
+		if (SDL_RenderCopy(renderer, texture, NULL, &MenuBouton[i].bouton) != 0)
+		{
+			SDL_Log("ERREUR : La fonction SDL_RenderCopy a echoue > %s", SDL_GetError());
+			return (-1);
+		}
 
-	// Bouton "Quitter"
-	surface = TTF_RenderText_Solid(font, "Quitter", color);
-	if (surface == NULL)
-	{
-		SDL_Log("ERREUR : Impossible de créer la Surface > %s", SDL_GetError());
-		return (-1);
+		i++;
 	}
-	texture = SDL_CreateTextureFromSurface(renderer, surface);
-	if (texture == NULL)
-	{
-		SDL_Log("ERREUR : Impossible de créer la Texture > %s", SDL_GetError());
-		return (-1);
-	}
-	if (SDL_QueryTexture(texture, NULL, NULL, &TextW, &TextH) != 0)
-	{
-		SDL_Log("ERREUR : La fonction SDL_QueryTexture a echoue > %s", SDL_GetError());
-		return (-1);
-	}
-	dstrect.x = WINDOW_WIDTH / 2 - TextW / 2;
-	dstrect.y = WINDOW_HEIGHT / 3 + TextH * 3;
-	dstrect.w = TextW;
-	dstrect.h = TextH;
-	SDL_RenderCopy(renderer, texture, NULL, &dstrect);
 
 	SDL_RenderPresent(renderer);
 
@@ -146,8 +81,8 @@ int		pause(SDL_Window	*window, SDL_Renderer	*renderer, TTF_Font *font, SDL_bool 
 				// Croix de fermeture
 				case SDL_QUIT:
 					game_paused = SDL_FALSE;
-					*game_launched = SDL_FALSE;
-					*program_launched = SDL_FALSE;
+					Game->game_launched = SDL_FALSE;
+					Game->program_launched = SDL_FALSE;
 					break;
 
 				// Event clavier
@@ -165,26 +100,26 @@ int		pause(SDL_Window	*window, SDL_Renderer	*renderer, TTF_Font *font, SDL_bool 
 
 				case SDL_MOUSEBUTTONDOWN:
 					// Bouton Continuer
-					if (WINDOW_WIDTH / 2 - TextW / 2 <= event.motion.x && event.motion.x <= WINDOW_WIDTH / 2 + TextW / 2
-						&& WINDOW_HEIGHT / 3 + TextH <= event.motion.y && event.motion.y <= WINDOW_HEIGHT / 3 + TextH * 2)
+					if (MenuBouton[1].bouton.x <= event.motion.x && event.motion.x <= MenuBouton[1].bouton.x + MenuBouton[1].bouton.w
+						&& MenuBouton[1].bouton.y <= event.motion.y && event.motion.y <= MenuBouton[1].bouton.y + MenuBouton[1].bouton.h)
 					{
 						printf("Bouton Continuer\n");
-					//	game_paused = SDL_FALSE;
+						game_paused = SDL_FALSE;
 					}
 					// Bouton Sauvegarder
-					else if (WINDOW_WIDTH / 2 - TextW / 2 <= event.motion.x && event.motion.x <= WINDOW_WIDTH / 2 + TextW / 2
-						&& WINDOW_HEIGHT / 3 + TextH * 2 <= event.motion.y && event.motion.y <= WINDOW_HEIGHT / 3 + TextH * 2 + TextH)
+					else if (MenuBouton[2].bouton.x <= event.motion.x && event.motion.x <= MenuBouton[2].bouton.x + MenuBouton[2].bouton.w
+						&& MenuBouton[2].bouton.y <= event.motion.y && event.motion.y <= MenuBouton[2].bouton.y + MenuBouton[2].bouton.h)
 					{
 						printf("Bouton Sauvegarder\n");
 					}
 					// Bouton Quitter
-					else if (WINDOW_WIDTH / 2 - TextW / 2 <= event.motion.x && event.motion.x <= WINDOW_WIDTH / 2 + TextW / 2
-						&& WINDOW_HEIGHT / 3 + TextH * 3 <= event.motion.y && event.motion.y <= WINDOW_HEIGHT / 3 + TextH * 3 + TextH)
+					else if (MenuBouton[3].bouton.x <= event.motion.x && event.motion.x <= MenuBouton[3].bouton.x + MenuBouton[3].bouton.w
+						&& MenuBouton[3].bouton.y <= event.motion.y && event.motion.y <= MenuBouton[3].bouton.y + MenuBouton[3].bouton.h)
 					{
 						printf("Bouton Quitter\n");
-//						game_paused = SDL_FALSE;
-//						*game_launched = SDL_FALSE;
-//						*program_launched = SDL_FALSE;
+						game_paused = SDL_FALSE;
+						Game->game_launched = SDL_FALSE;
+						Game->program_launched = SDL_FALSE;
 					}
 
 				default: break;
@@ -192,6 +127,7 @@ int		pause(SDL_Window	*window, SDL_Renderer	*renderer, TTF_Font *font, SDL_bool 
 		}
 	}
 
+	// On remet la couleur en noir pour le prochain rendu
 	if (SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE) != 0)
 	{
 		SDL_Log("ERREUR : Impossible de changer la couleur pour le menu Pause > %s", SDL_GetError());

@@ -1,6 +1,19 @@
 #include "../header/header.h"
 
 
+void	initialise_jeu(s_Game *Game)
+{
+	Game->program_launched = SDL_TRUE;
+	Game->game_launched = SDL_FALSE;
+	Game->game_paused = SDL_FALSE;
+	Game->is_game_over = SDL_FALSE;
+	Game->load_from_save = SDL_FALSE;
+	Game->direction = 0;
+	Game->direction_changed = SDL_FALSE;
+	Game->vitesse = SLOW;
+	Game->pommesMangees = 0;
+	Game->pommesAManger = 0;
+}
 
 void	snake_game()
 {
@@ -36,6 +49,12 @@ void	snake_game()
 
 	/*---------------------------------- Execution du Programme  -------------------------------------------*/
 
+	SDL_Event event;
+
+	s_Game Game;
+
+	initialise_jeu(&Game);
+/*
 	// Booleen du programme
 	SDL_bool program_launched = SDL_TRUE;
 	// Booleen Jeu lancé/Menu principal
@@ -46,8 +65,6 @@ void	snake_game()
 	SDL_bool is_game_over = SDL_FALSE;
 	// Booleen pour savoir si il faut charger la partie depuis la sauvegarde
 	SDL_bool load_from_save = SDL_FALSE;
-
-	SDL_Event event;
 
 	// Utilisé pour le damier (Donc inutile pour l'instant)
 //	SDL_Rect rectangle;
@@ -60,14 +77,14 @@ void	snake_game()
 	int vitesse = SLOW;
 //	int score = 0;
 	int pommesMangees = 0;
-
+*/
 	// Si besoin d'un itérateur
 	int i;
 
 	srand(time(NULL));	// Initialisation de srand
 
 	s_Tete *Tete;
-	Tete = malloc(sizeof(Tete));
+	Tete = (s_Tete*)malloc(sizeof(Tete));
 
 	s_Serpent *Serpent;
 	Serpent = create_elem(((WINDOW_WIDTH / SQUARE_SIZE) / 2) * SQUARE_SIZE, ((WINDOW_HEIGHT / SQUARE_SIZE) / 2) * SQUARE_SIZE);
@@ -83,24 +100,24 @@ void	snake_game()
 	s_Pomme Pomme[NB_POMMES];
 
 	// Nombre de pommes restant avant d'en affichier de nouvelles
-	int pommesAManger;
+//	int pommesAManger = 0;
 
 
 	/*-------------------------------------------------------------------------------------------------*/
 	/*---------------------------------- BOUCLE PRINCIPALE  -------------------------------------------*/
 	/*-------------------------------------------------------------------------------------------------*/
-	while (program_launched)
+	while (Game.program_launched)
 	{
-		// MENU PRINCIPAL
 		SDL_RenderClear(renderer);
-		if (menu_principal(renderer, font, &program_launched, &game_launched) != 0)
+		// MENU PRINCIPAL
+		if (menu_principal(renderer, font, &Game) != 0)
 		{
 			// Free memory
-			exitWithError_noMsg(window, renderer, font);
+			exitWithError_noMsg(window, renderer, font, &Tete);
 		}
 
 		// Charger la sauvegarde ou initialiser une nouvelle partie
-		if (load_from_save)
+		if (Game.load_from_save)
 		{
 
 		}
@@ -110,22 +127,22 @@ void	snake_game()
 			for (i = 1; i < INITIAL_SNAKE_SIZE; i++)
 				list_push_back(&Tete);
 
-			pommesAManger = 0;
-			pommesMangees = 0;
+			Game.pommesAManger = 0;
+			Game.pommesMangees = 0;
 			initialise_pommes(Pomme);		
 		}
 
 		// On met les variables à leur état initial avant de (re)lancer la partie
-		is_game_over = SDL_FALSE;
-		game_paused = SDL_FALSE;
+		Game.is_game_over = SDL_FALSE;
+		Game.game_paused = SDL_FALSE;
 
-		direction = 0;
-		vitesse = SLOW;
+		Game.direction = 0;
+		Game.vitesse = SLOW;
 
 		// BOUCLE DE JEU PRINCIPALE
-		while (game_launched)
+		while (Game.game_launched)
 		{
-			game_paused = SDL_FALSE;
+			Game.game_paused = SDL_FALSE;
 			SDL_RenderClear(renderer);
 
 			// Construction d'un damier
@@ -133,22 +150,31 @@ void	snake_game()
 	//		creer_damier(&window, &renderer, rectangle);
 
 			// Replacer les pommes si elles ont toutes été mangées
-			if (pommesAManger == 0)
+			if (Game.pommesAManger == 0)
 			{
 				placer_pommes(&Tete, Pomme);
-				pommesAManger = NB_POMMES;
+				Game.pommesAManger = NB_POMMES;
 			}
+
 			// Dessiner les pommes dans Renderer
-			dessiner_pommes(&Tete, renderer, window, Pomme, font);
-
-			// Dessiner le Serpent dans Renderer
-			dessiner_serpent(&Tete, renderer, window, font);
-
-			// Dessiner le score en dernier pour qu'il apparaisse au dessus de tout
-			if (dessiner_score(renderer, window, pommesMangees, font) != 0)
+			if (dessiner_pommes(&Tete, renderer, window, Pomme, font) != 0)
 			{
 				// Free memory
-				exitWithError_noMsg(window, renderer, font);
+				exitWithError_noMsg(window, renderer, font, &Tete);
+			}
+
+			// Dessiner le Serpent dans Renderer
+			if (dessiner_serpent(&Tete, renderer, window, font) != 0)
+			{
+				// Free memory
+				exitWithError_noMsg(window, renderer, font, &Tete);
+			}
+
+			// Dessiner le score en dernier pour qu'il apparaisse au dessus de tout
+			if (dessiner_score(renderer, window, Game.pommesMangees, font) != 0)
+			{
+				// Free memory
+				exitWithError_noMsg(window, renderer, font, &Tete);
 			}
 
 			//On remet la couleur noir pour le fond
@@ -162,9 +188,9 @@ void	snake_game()
 			SDL_RenderPresent(renderer);
 
 			// Attente avant le prochain rendu - Ici on peut queue des events
-			SDL_Delay(vitesse);
+			SDL_Delay(Game.vitesse);
 
-			direction_changed = SDL_FALSE;
+			Game.direction_changed = SDL_FALSE;
 			
 			/******************* GESTION DES EVENEMENTS *******************/
 			// Dans un while pour vider la queue d'events
@@ -174,8 +200,8 @@ void	snake_game()
 				{
 					// Croix de fermeture
 					case SDL_QUIT:
-						game_launched = SDL_FALSE;
-						program_launched = SDL_FALSE;
+						Game.game_launched = SDL_FALSE;
+						Game.program_launched = SDL_FALSE;
 						break;
 
 					// Event clavier
@@ -184,45 +210,45 @@ void	snake_game()
 						{
 							// Menu Pause
 							case SDLK_ESCAPE:
-								game_paused = SDL_TRUE;
+								Game.game_paused = SDL_TRUE;
 								break;
 
 							// Changer de vitesse
 							case SDLK_LSHIFT:
-								vitesse = (vitesse == SLOW) ? FAST : SLOW;
+								Game.vitesse = (Game.vitesse == SLOW) ? FAST : SLOW;
 								break;
 
 							// Snake direction ZQSD / Arrows
 							case SDLK_z:
 							case SDLK_UP:
-								if (direction == DOWN || direction_changed)
+								if (Game.direction == DOWN || Game.direction_changed)
 									break;
-								direction_changed = SDL_TRUE;
-								direction = UP;
+								Game.direction_changed = SDL_TRUE;
+								Game.direction = UP;
 								break;
 
 							case SDLK_s:
 							case SDLK_DOWN:
-								if (direction == UP || direction_changed)
+								if (Game.direction == UP || Game.direction_changed)
 									break;
-								direction_changed = SDL_TRUE;
-								direction = DOWN;
+								Game.direction_changed = SDL_TRUE;
+								Game.direction = DOWN;
 								break;
 
 							case SDLK_q:
 							case SDLK_LEFT:
-								if (direction == RIGHT || direction_changed)
+								if (Game.direction == RIGHT || Game.direction_changed)
 									break;
-								direction_changed = SDL_TRUE;
-								direction = LEFT;
+								Game.direction_changed = SDL_TRUE;
+								Game.direction = LEFT;
 								break;
 
 							case SDLK_d:
 							case SDLK_RIGHT:
-								if (direction == LEFT || direction_changed)
+								if (Game.direction == LEFT || Game.direction_changed)
 									break;
-								direction_changed = SDL_TRUE;
-								direction = RIGHT;
+								Game.direction_changed = SDL_TRUE;
+								Game.direction = RIGHT;
 								break;
 
 							default: break;
@@ -235,26 +261,26 @@ void	snake_game()
 			/******************* FIN GESTION DES EVENEMENTS *******************/
 
 			// BOUCLE DE PAUSE
-			if (game_paused)
+			if (Game.game_paused)
 			{
-				if (pause(window, renderer, font, &game_launched, &program_launched) != 0)
+				if (pause(window, renderer, font, &Game) != 0)
 				{
 					// Free memory
-					exitWithError_noMsg(window, renderer, font);
+					exitWithError_noMsg(window, renderer, font, &Tete);
 				}
 			}
 
 			// Deplacer Snake
-			move_snake(&Tete, direction, &game_launched, Pomme, &pommesAManger, &is_game_over, &pommesMangees);
+			move_snake(&Tete, Pomme, &Game);
 
-			if (is_game_over)
+			if (Game.is_game_over)
 			{
 				reset_snake(&Tete, ((WINDOW_WIDTH / SQUARE_SIZE) / 2) * SQUARE_SIZE,((WINDOW_HEIGHT / SQUARE_SIZE) / 2) * SQUARE_SIZE);
 				
-				if (game_over(window, renderer, font, &game_launched, &program_launched) != 0)
+				if (game_over(window, renderer, font, &Game) != 0)
 				{
 					// Free memory
-					exitWithError_noMsg(window, renderer, font);
+					exitWithError_noMsg(window, renderer, font, &Tete);
 				}
 			}
 		}
@@ -263,7 +289,7 @@ void	snake_game()
 	/*------------------------------------------------------------------------------------------------------*/
 
 	
-	// On libère la mémoire allouée pour le Serpent et les Pommes
+	// On libère la mémoire allouée par malloc()
 	delete_snake(&Tete);
 	// Fermeture de la SDL + Libérer la mémoire qu'elle à allouée
 	SDL_DestroyRenderer(renderer);

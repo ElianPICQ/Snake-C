@@ -78,16 +78,18 @@ void	exitWithError_5(const char *message, SDL_Window *window, SDL_Renderer *rend
 	exit(EXIT_FAILURE);
 }
 
-// Comme ci dessus mais le message d'erreur est ecrit manuellement
+// Le message d'erreur est ecrit manuellement avant d'appeler la fonction
 /* Utiliser si à été initialisé:
+ *	- Tete à été malloc (s_Tete *Tete)
  *	- La Police (TTF_Font *font)
  *	- Le module TTF
  *	- Le rendu (SDL_Renderer *renderer)
  *	- La fenêtre (SDL_Window *window)
  *	- La SDL
 */
-void	exitWithError_noMsg(SDL_Window *window, SDL_Renderer *renderer, TTF_Font *font)
+void	exitWithError_noMsg(SDL_Window *window, SDL_Renderer *renderer, TTF_Font *font, s_Tete **Tete)
 {
+	delete_snake(Tete);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	TTF_CloseFont(font);

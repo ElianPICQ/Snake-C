@@ -67,7 +67,7 @@ void	delete_snake(s_Tete	**Tete)
 		list = tmp;
 	}
 
-	*Tete = NULL;
+	free(*Tete);
 }
 
 // Libère la mémoire allouée (malloc) pour le Serpent
@@ -107,7 +107,7 @@ void	ft_switch(int *a, int *b)
 }
 
 
-void	move_snake(s_Tete **Tete, int direction, SDL_bool *game_launched, s_Pomme *Pomme, int *pommesAManger, SDL_bool *is_game_over, int *pommesMangees)
+void	move_snake(s_Tete **Tete, s_Pomme *Pomme, s_Game *Game)
 {
 	s_Serpent *Serpent;
 	int x, y;
@@ -117,9 +117,9 @@ void	move_snake(s_Tete **Tete, int direction, SDL_bool *game_launched, s_Pomme *
 	x = Serpent->morceauCorps.x;
 	y = Serpent->morceauCorps.y;
 
-	if (direction)
+	if (Game->direction)
 	{
-		switch (direction)
+		switch (Game->direction)
 		{
 			case UP:
 				y -= SQUARE_SIZE;
@@ -150,15 +150,15 @@ void	move_snake(s_Tete **Tete, int direction, SDL_bool *game_launched, s_Pomme *
 		{
 			if (Pomme[i].infoPomme.x == Serpent->morceauCorps.x && Pomme[i].infoPomme.y == Serpent->morceauCorps.y)
 			{
-				*pommesMangees = *pommesMangees + 1;
-				*pommesAManger = *pommesAManger - 1;
+				Game->pommesMangees = Game->pommesMangees + 1;
+				Game->pommesAManger = Game->pommesAManger - 1;
 
 				// Déplacer la pomme en dehors du plateau
 				Pomme[i].infoPomme.x = 0 - SQUARE_SIZE;
 				Pomme[i].infoPomme.y = 0 - SQUARE_SIZE;
 
 				// Si on a mangé toutes les pommes, on aggrandi le Serpent
-				if (*pommesAManger == 0)
+				if (Game->pommesAManger == 0)
 				{
 					grandit = SDL_TRUE;
 					list_push_front(Tete, x, y);
@@ -191,7 +191,7 @@ void	move_snake(s_Tete **Tete, int direction, SDL_bool *game_launched, s_Pomme *
 			if (x == Serpent->morceauCorps.x && y == Serpent->morceauCorps.y)
 			{
 				Serpent = NULL;
-				*is_game_over = SDL_TRUE;
+				Game->is_game_over = SDL_TRUE;
 			}
 			else if (Serpent->suivant)
 				Serpent = Serpent->suivant;
@@ -205,7 +205,7 @@ void	move_snake(s_Tete **Tete, int direction, SDL_bool *game_launched, s_Pomme *
 }
 
 
-void	dessiner_serpent(s_Tete **Tete, SDL_Renderer *renderer, SDL_Window *window, TTF_Font *font)
+int		dessiner_serpent(s_Tete **Tete, SDL_Renderer *renderer, SDL_Window *window, TTF_Font *font)
 {
 	s_Serpent *Serpent;
 
@@ -214,28 +214,29 @@ void	dessiner_serpent(s_Tete **Tete, SDL_Renderer *renderer, SDL_Window *window,
 	// On dessine la Tete d'une couleur légèrement différente
 	if (SDL_SetRenderDrawColor(renderer, 35, 255, 35, SDL_ALPHA_OPAQUE) != 0)
 	{
-		delete_snake(Tete);
-		exitWithError_5("Impossible de changer la couleur pour le Serpent", window, renderer, font);
+		SDL_Log("ERREUR : Impossible de changer la couleur pour la Tete du Serpent > %s", SDL_GetError());
+		return (-1);
 	}
+
 	if (SDL_RenderFillRect(renderer, &Serpent->morceauCorps) != 0)
 	{
-		delete_snake(Tete);
-		exitWithError_5("Impossible de dessiner le rectangle", window, renderer, font);
+		SDL_Log("ERREUR : Impossible de dessiner la Tete du Serpent > %s", SDL_GetError());
+		return (-1);
 	}
 	Serpent = Serpent->suivant;
 
 	// On dessine le reste du serpent
 	if (SDL_SetRenderDrawColor(renderer, 150, 255, 50, SDL_ALPHA_OPAQUE) != 0)
 	{
-		delete_snake(Tete);
-		exitWithError_5("Impossible de changer la couleur pour le Serpent", window, renderer, font);
+		SDL_Log("ERREUR : Impossible de changer la couleur pour le Serpent > %s", SDL_GetError());
+		return (-1);
 	}
 	while (Serpent != NULL)
 	{
 		if (SDL_RenderFillRect(renderer, &Serpent->morceauCorps) != 0)
 		{
-			delete_snake(Tete);
-			exitWithError_5("Impossible de dessiner le rectangle", window, renderer, font);
+			SDL_Log("ERREUR : Impossible de dessiner le Serpent > %s", SDL_GetError());
+			return (-1);
 		}
 		Serpent = Serpent->suivant;
 	}
